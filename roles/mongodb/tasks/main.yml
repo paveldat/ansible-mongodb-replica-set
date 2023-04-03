@@ -1,0 +1,8 @@
+- name: Install required packages
+  include_tasks: install-packages.yml
+
+- name: Configure host
+  include_tasks: configure-host.yml
+
+- name: Configure database
+  include_tasks: configure-db.yml

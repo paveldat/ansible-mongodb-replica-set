@@ -1,0 +1,48 @@
+- name: Set tcp_keepalive_time
+  ansible.posix.sysctl:
+    name: net.ipv4.tcp_keepalive_time
+    value: '{{ tcp_keepalive_time }}'
+    state: present
+
+- name: Set tcp_keepalive_intvl
+  ansible.posix.sysctl:
+    name: net.ipv4.tcp_keepalive_intvl
+    value: '{{ tcp_keepalive_intvl }}'
+    state: present
+
+- name: Set vm.max_map_count
+  ansible.posix.sysctl:
+    name: vm.max_map_count
+    value: '{{ vm_max_map_count }}'
+    state: present
+
+- name: Set fs.file-max
+  ansible.posix.sysctl:
+    name: fs.file-max
+    value: '{{ fs_file_max }}'
+    state: present
+
+- name: Set kernel.pid_max
+  ansible.posix.sysctl:
+    name: kernel.pid_max
+    value: '{{ kernel_pid_max }}'
+    state: present
+
+- name: Set kernel.threads-max
+  ansible.posix.sysctl:
+    name: kernel.threads-max
+    value: '{{ kernel_threads_max }}'
+    state: present
+
+- name: Set vm.zone_reclaim_mode
+  ansible.posix.sysctl:
+    name: vm.zone_reclaim_mode
+    value: '{{ zone_reclaim_mode }}'
+    state: present
+
+- name: Disable transparent huge pages
+  lineinfile:
+    path: /etc/sysfs.conf
+    create: true
+    regexp: '^kernel\/mm\/transparent\_hugepage\/enabled'
+    line: "kernel/mm/transparent_hugepage/enabled = never"

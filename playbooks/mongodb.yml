@@ -1,0 +1,11 @@
+- hosts: mongodb
+  roles:
+  - mongodb
+  vars:
+    mongodb_replica_members:
+    - host: "<host-1>:27017"
+      priority: 1
+    - host: "<host-2>:27017"
+      priority: 0.5
+    - host: "<host-3>:27017"
+      priotiry: 0.5

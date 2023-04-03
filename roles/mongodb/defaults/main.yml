@@ -1,0 +1,18 @@
+mongodb_daemon_name: mongod
+mongodb_package: mongodb-org
+mongodb_version: '6.0'
+mongodb_apt_key_url:
+  '6.0': 'https://www.mongodb.org/static/pgp/server-6.0.asc'
+mongodb_remote_repo: http://repo.mongodb.org/apt/ubuntu
+
+mongodb_path: /var/mongodb
+mongodb_replica_name: rs0
+
+zstd_compression_level: 6
+tcp_keepalive_time: 120
+tcp_keepalive_intvl: 30
+vm_max_map_count: 128000
+fs_file_max: 98000
+kernel_pid_max: 64000
+kernel_threads_max: 64000
+zone_reclaim_mode: 0

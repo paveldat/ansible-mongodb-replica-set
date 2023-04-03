@@ -1,0 +1,21 @@
+- name: Create a replicaset and use a custom priority for each member
+  community.mongodb.mongodb_replicaset:
+    login_host: "{{ ansible_facts['hostname'] }}.{{ ansible_facts['domain'] }}"
+    replica_set: '{{ mongodb_replica_name }}'
+    members: '{{ mongodb_replica_members }}'
+  when: 
+  - groups.mongodb.index(inventory_hostname) == 0
+  - mongodb_replica_members is defined and mongodb_replica_members
+
+- name: Sleep 10s for replica starts
+  ansible.builtin.shell:
+    cmd: sleep 10
+
+- name: Configure concern
+  community.mongodb.mongodb_shell:
+    login_host: "{{ ansible_facts['hostname'] }}.{{ ansible_facts['domain'] }}"
+    mongo_cmd: mongosh
+    eval: "db.adminCommand({setDefaultRWConcern: 1, defaultWriteConcern: {w: 1}})"
+  when: groups.mongodb.index(inventory_hostname) == 0
+  notify:
+    - mongodb restart

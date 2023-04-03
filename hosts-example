@@ -1,0 +1,6 @@
+[mongodb]
+host-1   # master node
+host-2
+host-3
+...
+host-N

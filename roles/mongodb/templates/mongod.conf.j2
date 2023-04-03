@@ -1,0 +1,38 @@
+# mongod.conf
+
+# for documentation of all options, see:
+#   http://docs.mongodb.org/manual/reference/configuration-options/
+
+# Where and how to store data.
+storage:
+  dbPath: {{ mongodb_path }}/mongodb
+  engine: "wiredTiger"
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: {{ storage_cache_size_gb }}
+      journalCompressor: zstd
+      zstdCompressionLevel: {{ zstd_compression_level }}
+    collectionConfig:
+      blockCompressor: zstd
+    indexConfig:
+      prefixCompression: true
+
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+
+# network interfaces
+net:
+  port: 27017
+  bindIp: {{ ansible_facts['hostname'] }}.{{ ansible_facts['domain'] }}
+  compression:
+    compressors: zstd
+
+# how the process runs
+processManagement:
+  timeZoneInfo: /usr/share/zoneinfo
+
+replication:
+  replSetName: "{{ mongodb_replica_name }}"

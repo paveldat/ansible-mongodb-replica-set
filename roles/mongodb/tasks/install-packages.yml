@@ -1,0 +1,60 @@
+- name: Install requirements
+  package:
+    update_cache: yes
+    name:
+    - gpg
+    - sysfsutils
+    state: latest
+
+- name: Install package requirements on ansible controller
+  package:
+    name:
+    - python3-pip
+    state: present
+
+- name: Install python dependencies
+  pip:
+    name:
+    - pymongo
+
+- name: Add gpg key
+  apt_key:
+    url: '{{ mongodb_apt_key_url[mongodb_version] }}'
+    keyring: /usr/share/keyrings/mongodb-org.gpg
+
+- name: Add mongodb-org apt repository
+  apt_repository:
+    repo: 'deb [signed-by=/usr/share/keyrings/mongodb-org.gpg] {{ mongodb_remote_repo }} {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_version }} multiverse'
+    filename: 'stable'
+    state: present
+    update_cache: true
+
+- name: Install MongoDB
+  package:
+    update_cache: yes
+    name: '{{ mongodb_package }}'
+
+- name: Create MongoDB storage folder
+  ansible.builtin.file:
+    path: '{{ mongodb_path }}/mongodb'
+    state: directory
+
+- name: Create the mongodb startup file
+  template:
+    src: mongod.service.j2
+    dest: /etc/systemd/system/mongod.service
+    mode: 0644
+
+- name: Configure mongodb
+  template:
+    src: mongod.conf.j2
+    dest: /etc/mongod.conf
+  notify:
+    - mongodb restart
+
+- name: Ensure mongodb is running and and enabled to start automatically on reboots
+  systemd:
+    name: '{{ mongodb_daemon_name }}'
+    enabled: yes
+    state: started
+    daemon_reload: true

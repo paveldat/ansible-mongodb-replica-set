@@ -1,0 +1,1 @@
+storage_cache_size_gb: '{{ ((ansible_memtotal_mb / 1024 - 1) / 2) | round | int }}'
